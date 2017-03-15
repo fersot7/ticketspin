@@ -5,8 +5,9 @@
   var btnRegistrar = $("[data-registrar]");
   var btnCerrar = $("[data-close]");
   var btnLimpiarLista = $("[data-limpiar-lista]");
-  var taCliente;
+  var taCliente = $("#cliente");;
   var listaCliente = [];
+  var poscionCliente = 0;
   var maxRandon = 0;
   var inputRadio;
   var intervalo;
@@ -14,7 +15,7 @@
   var activar = true;
   var progreso;
 
-
+  
   $("input[name=rRandom]").click( () => {
     inputRadio = $('input:radio[name=rRandom]:checked').val();
     $(".alert").hide();
@@ -24,6 +25,12 @@
     }
     else {
       $("[data-input='maxRandom']").hide();
+    }
+    if (inputRadio == "lista") {
+      $("[data-check='labelRemover']").show();
+    }
+    else {
+      $("[data-check='labelRemover']").hide()
     }
   });
 
@@ -94,24 +101,25 @@
       $(".progress").show();
       if (cont < 20)
       {
-          aleatorio = Math.floor( Math.random() * maxRandon) + 1;
+        aleatorio = Math.floor( Math.random() * maxRandon) + 1;
 
-          if ($('input:radio[name=rRandom]:checked').val() == 'numero')
-          {
+        if ($('input:radio[name=rRandom]:checked').val() == 'numero')
+        {
+          $("#random").text(aleatorio);
+        }
+        else if ($('input:radio[name=rRandom]:checked').val() == 'texto')
+        {
+          $("#random").text(abecedario[aleatorio-1].name);
+        }
+        else if ($('input:radio[name=rRandom]:checked').val() == 'lista')
+        {
+          poscionCliente = aleatorio - 1;
+          $("#random").text(listaCliente[poscionCliente]);
+        }
+        else
+        {
             $("#random").text(aleatorio);
-          }
-          else if ($('input:radio[name=rRandom]:checked').val() == 'texto')
-          {
-            $("#random").text(abecedario[aleatorio].name);
-          }
-          else if ($('input:radio[name=rRandom]:checked').val() == 'lista')
-          {
-                $("#random").text(listaCliente[aleatorio-1]);
-          }
-          else
-          {
-              $("#random").text(aleatorio);
-          }
+        }
       }
       else
       {
@@ -123,10 +131,25 @@
       cont ++;
   }
 
-  function desactivarIntervalo()
-  {
+  function desactivarIntervalo() {
       clearInterval(intervalo);
       $("#message").text("Ticket Ganador!");
+
+    if ($('input:checkbox[name=chkRemover]').is(':checked')) {
+      listaCliente.splice(poscionCliente,1);
+      taCliente.val("");
+
+      for (var i = 0; i < listaCliente.length; i++) {
+        if (i == listaCliente.length-1)
+        {
+          taCliente.val( taCliente.val() + listaCliente[i]);
+        }
+        else {
+          taCliente.val( taCliente.val() + listaCliente[i] + "\n");
+        }
+      }
+    }
+    
   }
 
   // Objeto Abecedario
@@ -161,10 +184,8 @@
       ];
 
 
-  btnRegistrar.click( () =>
-  {
+  btnRegistrar.click( () => {
 
-    taCliente = $("#cliente");
     if (taCliente.val() == "")
     {
       $("#messageAlert").text("Debe Haber Al Menos Un Registro..!");

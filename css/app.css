@@ -79,6 +79,16 @@ body {
   background-color: #E8B229;
 }
 
+[data-check='labelRemover'] {
+    font-size: .8em; 
+    font-weight: bold;
+}
+
+[data-check='labelRemover']:hover { 
+    font-style: oblique;
+    color: teal;
+}
+
 #carousel-container {
   padding-bottom: 2em;
 }
